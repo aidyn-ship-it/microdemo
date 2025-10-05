@@ -128,10 +128,9 @@
         const logo = new Image();
         logo.src = CFG.LOGO_URL;
         logo.className = 'brand-asset';
+        logo.id = 'logo'
         logo.style.left = '0%';
         logo.style.top = '12%';
-        logo.style.width = '300px';
-        logo.style.height = 'auto';
         numsEl.appendChild(logo);
         requestAnimationFrame(() => {
           requestAnimationFrame(() => logo.classList.add('show'));
@@ -141,11 +140,9 @@
         const x = new Image();
         x.src = CFG.X3D_URL;
         x.className = 'brand-asset';
+        x.id = 'logo3d'
         x.style.bottom = '0%';
         x.style.right = '0%';
-        x.style.transform = 'translateX(20rem)';
-        x.style.width = '700px';
-        x.style.height = 'auto';
         x.style.position = 'absolute';
         x.style.top = 'auto';
         numsEl.appendChild(x);
