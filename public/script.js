@@ -9,8 +9,8 @@
       WORD_REVEAL_STAGGER: 80,
       WORD_SHOW_MS: 3000,
       WORD_FADE_MS: 1200,
-      LOGO_URL: './assets/x_flat.jpeg',
-      X3D_URL: './assets/x_3d.jpeg'
+      LOGO_URL: './assets/x_flat.png',
+      X3D_URL: './assets/x_3d.png'
     };
 
     const POSITIVE = [
@@ -53,13 +53,25 @@
       if(!sequenceRunning) runSequence();
     }
 
-    function draw(x1,y1,x2,y2){
-      const w=18,g=18;
-      drawCtx.lineCap='round'; drawCtx.lineJoin='round';
-      drawCtx.strokeStyle='rgba(57,255,136,1)'; drawCtx.lineWidth=w; drawCtx.shadowBlur=g; drawCtx.shadowColor='rgba(57,255,136,0.9)';
-      drawCtx.beginPath(); drawCtx.moveTo(x1,y1); drawCtx.lineTo(x2,y2); drawCtx.stroke();
-      drawCtx.save(); drawCtx.shadowBlur=0; drawCtx.strokeStyle='rgba(255,255,255,0.9)'; drawCtx.lineWidth=Math.max(2,w*0.35);
-      drawCtx.beginPath(); drawCtx.moveTo(x1,y1); drawCtx.lineTo(x2,y2); drawCtx.stroke(); drawCtx.restore();
+    function draw(x1, y1, x2, y2) {
+      // Glow layer
+      drawCtx.lineCap = 'round';
+      drawCtx.strokeStyle = 'rgba(57,255,136,0.5)';
+      drawCtx.lineWidth = 15;
+      drawCtx.shadowBlur = 35;
+      drawCtx.shadowColor = 'rgba(57,255,136,1)';
+      drawCtx.beginPath();
+      drawCtx.moveTo(x1, y1);
+      drawCtx.lineTo(x2, y2);
+      drawCtx.stroke();
+
+      drawCtx.shadowBlur = 0;
+      drawCtx.strokeStyle = 'rgba(255,255,255,0.9)';
+      drawCtx.lineWidth = 3;
+      drawCtx.beginPath();
+      drawCtx.moveTo(x1, y1);
+      drawCtx.lineTo(x2, y2);
+      drawCtx.stroke();
     }
 
     function randomIntDigits(min=10,max=16){
@@ -95,6 +107,8 @@
       for(let i=0;i<n;i++){
         const f=FEELINGS[i%FEELINGS.length]; const cls = POSITIVE.includes(f)?'pos':'neg';
         const span=document.createElement('span'); span.className='word '+cls; span.textContent=f;
+        const size = 16 + Math.random() * 16;
+        span.style.fontSize = `${size}px`;
         span.style.left=(40+Math.random()*(w-80))+'px'; span.style.top=(40+Math.random()*(h-80))+'px';
         numsEl.appendChild(span);
         setTimeout(()=> span.classList.add('show'), CFG.WORD_REVEAL_STAGGER*i);
@@ -108,19 +122,36 @@
       setTimeout(()=>{ clearNums(); cb&&cb(); }, CFG.WORD_FADE_MS + items.length*20 + 200);
     }
 
-    function addBrandAssets(){
-      // Remove existing
-      numsEl.querySelectorAll('.brand-asset').forEach(n=> n.remove());
-      if (CFG.LOGO_URL){
-        const logo = new Image(); logo.src = CFG.LOGO_URL; logo.className='brand-asset';
-        logo.style.left='12%'; logo.style.top='12%'; logo.style.width='96px'; logo.style.height='auto';
-        numsEl.appendChild(logo); requestAnimationFrame(()=> logo.classList.add('show'));
+    function addBrandAssets() {
+      numsEl.querySelectorAll('.brand-asset').forEach(n => n.remove());
+      if (CFG.LOGO_URL) {
+        const logo = new Image();
+        logo.src = CFG.LOGO_URL;
+        logo.className = 'brand-asset';
+        logo.style.left = '0%';
+        logo.style.top = '12%';
+        logo.style.width = '300px';
+        logo.style.height = 'auto';
+        numsEl.appendChild(logo);
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => logo.classList.add('show'));
+        });
       }
-      if (CFG.X3D_URL){
-        const x = new Image(); x.src = CFG.X3D_URL; x.className='brand-asset';
-        x.style.right='8%'; x.style.bottom='10%'; x.style.width='160px'; x.style.height='auto';
-        x.style.position='absolute'; x.style.left='auto'; x.style.top='auto';
-        numsEl.appendChild(x); requestAnimationFrame(()=> x.classList.add('show'));
+      if (CFG.X3D_URL) {
+        const x = new Image();
+        x.src = CFG.X3D_URL;
+        x.className = 'brand-asset';
+        x.style.bottom = '0%';
+        x.style.right = '0%';
+        x.style.transform = 'translateX(20rem)';
+        x.style.width = '700px';
+        x.style.height = 'auto';
+        x.style.position = 'absolute';
+        x.style.top = 'auto';
+        numsEl.appendChild(x);
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => x.classList.add('show'));
+        });
       }
     }
 
